@@ -60,9 +60,9 @@ class HomePage extends StatelessWidget {
                   padding: EdgeInsets.all(8.0),
                   child: TabBarView(
                     children: [
-                      Transactions(marketDataType: MarketDataType.all),
-                      Transactions(marketDataType: MarketDataType.spot),
-                      Transactions(marketDataType: MarketDataType.future),
+                      Transactions(),
+                      Transactions(),
+                      Transactions(),
                     ],
                   ),
                 ),
@@ -78,19 +78,17 @@ class HomePage extends StatelessWidget {
 class Transactions extends StatelessWidget {
   const Transactions({
     Key? key,
-    required this.marketDataType,
   }) : super(key: key);
-  final MarketDataType marketDataType;
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
-        children: [
-          const SizedBox(height: 64),
-          const TransactionTableHeader(),
-          const SizedBox(height: 16),
-          TransactionTable(marketDataType: marketDataType),
+        children: const [
+          SizedBox(height: 64),
+          TransactionTableHeader(),
+          SizedBox(height: 16),
+          TransactionTable(),
         ],
       ),
     );

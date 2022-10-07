@@ -7,14 +7,11 @@ import 'package:provider/provider.dart';
 class TransactionTable extends StatelessWidget {
   const TransactionTable({
     Key? key,
-    required this.marketDataType,
   }) : super(key: key);
-  final MarketDataType marketDataType;
 
   @override
   Widget build(BuildContext context) {
     final marketDataProvider = context.watch<MarketState>();
-    marketDataProvider.selectedMarketDataType = marketDataType;
 
     return Table(
       border: TableBorder.all(),
