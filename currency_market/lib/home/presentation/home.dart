@@ -55,23 +55,14 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
               ),
-              Expanded(
+              const Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(8.0),
                   child: TabBarView(
                     children: [
-                      Center(
-                        child: Column(
-                          children: const [
-                            SizedBox(height: 64),
-                            TransactionTableHeader(),
-                            SizedBox(height: 16),
-                            TransactionTable(),
-                          ],
-                        ),
-                      ),
-                      const Center(child: Text(spotTypeKey)),
-                      const Center(child: Text(futureTypeKey)),
+                      Transactions(),
+                      Transactions(),
+                      Transactions(),
                     ],
                   ),
                 ),
@@ -79,6 +70,24 @@ class HomePage extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class Transactions extends StatelessWidget {
+  const Transactions({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        children: const [
+          SizedBox(height: 64),
+          TransactionTableHeader(),
+          SizedBox(height: 16),
+          TransactionTable(),
+        ],
       ),
     );
   }
