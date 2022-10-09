@@ -2,6 +2,7 @@ import 'package:currency_market/transaction/data/model/transaction.dart';
 import 'package:currency_market/transaction/data/repository/transactions_repository.dart';
 import 'package:currency_market/transaction/state/table_sort_state.dart';
 import 'package:flutter/foundation.dart';
+import 'package:fuzzy/fuzzy.dart';
 
 enum TransactionType { spot, future, all }
 
@@ -17,8 +18,10 @@ class TransactionsState extends ChangeNotifier {
 - Spot: Only show Spot data
 - Futures: Only show Futures data
   */
+  String _searchText;
+  List<Transaction> _currentData = [];
 
-  TransactionsState.initial() {
+  TransactionsState.initial() : _searchText = '' {
     _currentData = TransactionsRepository.instance.getTransactions();
     _currentData.sort((a, b) => a.compareTo(b));
   }
@@ -55,7 +58,6 @@ class TransactionsState extends ChangeNotifier {
       .where((element) => element.type == 'FUTURES')
       .toList();
 
-  List<Transaction> _currentData = [];
   List<Transaction> get currentData => _currentData;
 
   void switchDataSource(TransactionType transactionType) {
@@ -109,5 +111,49 @@ class TransactionsState extends ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  void searchTextChanged(String newText) {
+    List<Transaction> transactionsToSearch = [];
+    if (newText.isEmpty) {
+      // When user text is empty then return all the transactions
+      final searchResults = getTransactions();
+      _currentData = searchResults;
+      notifyListeners();
+      return;
+    }
+    // When user text is longer than the previous search text
+    transactionsToSearch = getTransactions();
+    final Fuzzy<String?> fuzzyWrapper = Fuzzy(
+      transactionsToSearch.map((e) => e.base).toList(),
+      options: FuzzyOptions(
+        findAllMatches: true,
+        tokenize: true,
+        threshold: 0.5,
+      ),
+    );
+
+    _searchText = newText;
+
+    // Make the fuzzy search
+    final searchResult = fuzzyWrapper.search(_searchText);
+
+    // Find out all transactions that intersect
+    // with the fuzzy search results of the
+    // base field of the transaction
+    _currentData = _resolveFuzzyIntersection(
+      baseSearchResults: searchResult.map((e) => e.item).toList(),
+      transactions: transactionsToSearch,
+    );
+
+    notifyListeners();
+  }
+
+  List<Transaction> _resolveFuzzyIntersection({
+    required List<String?> baseSearchResults,
+    required List<Transaction> transactions,
+  }) {
+    transactions.removeWhere((item) => !baseSearchResults.contains(item.base));
+    return transactions;
   }
 }

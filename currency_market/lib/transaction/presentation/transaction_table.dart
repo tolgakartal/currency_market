@@ -14,6 +14,21 @@ class TransactionTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final transactionsState = context.watch<TransactionsState>();
 
+    if (transactionsState.currentData.isEmpty) {
+      return const SizedBox(
+        width: 200,
+        height: 200,
+        child: Center(
+          child: Text(
+            'No results found',
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          ),
+        ),
+      );
+    }
+
     return Table(
       border: TableBorder.all(),
       columnWidths: const <int, TableColumnWidth>{

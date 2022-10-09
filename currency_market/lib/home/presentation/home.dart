@@ -50,8 +50,12 @@ class HomePage extends StatelessWidget {
                         : x == 1
                             ? TransactionType.spot
                             : TransactionType.future;
+
+                    // Clear the input content after switching the tabs
+                    transactionsState.searchTextChanged('');
                     transactionsState.transactionType = currentTransactionType;
                     transactionsState.switchDataSource(currentTransactionType);
+
                     switch (currentTransactionType) {
                       case TransactionType.all:
                         sortState.requestCleanSort();
@@ -103,13 +107,14 @@ class TransactionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final transactionsState = context.watch<TransactionsState>();
     return SingleChildScrollView(
       child: Center(
         child: Column(
-          children: const [
-            SizedBox(height: 16),
+          children: [
+            const SizedBox(height: 16),
             TextField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     width: 1,
@@ -127,11 +132,14 @@ class TransactionsPage extends StatelessWidget {
                 labelStyle: TextStyle(color: Colors.black),
                 label: Text('Search...'),
               ),
+              onChanged: (text) {
+                transactionsState.searchTextChanged(text);
+              },
             ),
-            SizedBox(height: 16),
-            TransactionTableHeader(),
-            SizedBox(height: 16),
-            TransactionTable(),
+            const SizedBox(height: 16),
+            const TransactionTableHeader(),
+            const SizedBox(height: 16),
+            const TransactionTable(),
           ],
         ),
       ),
