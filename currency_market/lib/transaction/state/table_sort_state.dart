@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+enum SortType { ascending, descending }
+
 class TableSortState extends ChangeNotifier {
   bool _symbolSortRequested = false;
   bool _lastPriceSortRequested = false;
@@ -40,6 +42,10 @@ class TableSortState extends ChangeNotifier {
     _resetTableSortState();
     _volumeSortRequested = true;
     notifyListeners();
+  }
+
+  void requestCleanSort() {
+    _resetTableSortState();
   }
 
   void _resetTableSortState() {

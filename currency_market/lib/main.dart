@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
       home: MultiProvider(
         providers: [
           ChangeNotifierProvider<TransactionsState>.value(
-            value: TransactionsState(),
+            value: TransactionsState.initial(),
           ),
           ChangeNotifierProvider<TableSortState>.value(
             value: TableSortState(),

@@ -12,7 +12,7 @@ class TransactionTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final marketDataProvider = context.watch<TransactionsState>();
+    final transactionsState = context.watch<TransactionsState>();
 
     return Table(
       border: TableBorder.all(),
@@ -26,7 +26,7 @@ class TransactionTable extends StatelessWidget {
       },
       children: [
         // Table rows - and cells
-        for (var transaction in marketDataProvider.getTransactions())
+        for (var transaction in transactionsState.currentData)
           TableRow(
             children: [
               TableCell(child: SymbolCell(transaction: transaction)),

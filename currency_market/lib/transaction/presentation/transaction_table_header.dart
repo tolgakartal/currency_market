@@ -1,5 +1,6 @@
 import 'package:currency_market/transaction/presentation/transaction_cells/header_cell_container.dart';
 import 'package:currency_market/transaction/state/table_sort_state.dart';
+import 'package:currency_market/transaction/state/transactions_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +10,7 @@ class TransactionTableHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sortState = context.watch<TableSortState>();
+    final transactionsState = context.watch<TransactionsState>();
     return Table(
       border: TableBorder.all(),
       columnWidths: const <int, TableColumnWidth>{
@@ -26,21 +28,37 @@ class TransactionTableHeader extends StatelessWidget {
               child: HeaderCellContainer(
                 title: 'Symbol',
                 sortRequested: sortState.symbolSortRequested,
-                requestSort: () => sortState.requestSortSymbol(),
+                requestSort: () {
+                  sortState.requestSortSymbol();
+                  transactionsState.sortBySymbol(sortState.symbolSortRequested
+                      ? SortType.ascending
+                      : SortType.descending);
+                },
               ),
             ),
             TableCell(
               child: HeaderCellContainer(
                 title: 'Last price',
                 sortRequested: sortState.lastPriceSortRequested,
-                requestSort: () => sortState.requestSortLastPrice(),
+                requestSort: () {
+                  sortState.requestSortLastPrice();
+                  transactionsState.sortByLastPrice(
+                      sortState.lastPriceSortRequested
+                          ? SortType.ascending
+                          : SortType.descending);
+                },
               ),
             ),
             TableCell(
               child: HeaderCellContainer(
                 title: 'Volume',
                 sortRequested: sortState.volumeSortRequested,
-                requestSort: () => sortState.requestSortVolume(),
+                requestSort: () {
+                  sortState.requestSortVolume();
+                  transactionsState.sortByVolume(sortState.volumeSortRequested
+                      ? SortType.ascending
+                      : SortType.descending);
+                },
               ),
             ),
           ],

@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:currency_market/transaction/presentation/transaction_table.dart';
 import 'package:currency_market/transaction/presentation/transaction_table_header.dart';
+import 'package:currency_market/transaction/state/table_sort_state.dart';
 import 'package:currency_market/transaction/state/transactions_state.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final marketDataProvider = context.watch<TransactionsState>();
+    final transactionsState = context.watch<TransactionsState>();
+    final sortState = context.read<TableSortState>();
     return DefaultTabController(
       length: 3,
       initialIndex: 0,
@@ -43,11 +45,35 @@ class HomePage extends StatelessWidget {
                   dragStartBehavior: DragStartBehavior.start,
                   mouseCursor: SystemMouseCursors.noDrop,
                   onTap: (x) {
-                    marketDataProvider.selectedMarketDataType = x == 0
+                    final currentTransactionType = x == 0
                         ? TransactionType.all
                         : x == 1
                             ? TransactionType.spot
                             : TransactionType.future;
+                    transactionsState.transactionType = currentTransactionType;
+                    transactionsState.switchDataSource(currentTransactionType);
+                    switch (currentTransactionType) {
+                      case TransactionType.all:
+                        sortState.requestCleanSort();
+                        break;
+                      case TransactionType.future:
+                        sortState.requestCleanSort();
+                        sortState.requestSortVolume();
+                        transactionsState.sortByVolume(
+                            sortState.volumeSortRequested
+                                ? SortType.ascending
+                                : SortType.descending);
+                        break;
+                      case TransactionType.spot:
+                        sortState.requestCleanSort();
+                        sortState.requestSortVolume();
+                        transactionsState.sortByVolume(
+                            sortState.volumeSortRequested
+                                ? SortType.ascending
+                                : SortType.descending);
+                        break;
+                      default:
+                    }
                   },
                   tabs: const [
                     Tab(text: 'ALL'),
@@ -61,9 +87,9 @@ class HomePage extends StatelessWidget {
                   padding: EdgeInsets.all(8.0),
                   child: TabBarView(
                     children: [
-                      Transactions(),
-                      Transactions(),
-                      Transactions(),
+                      TransactionsPage(),
+                      TransactionsPage(),
+                      TransactionsPage(),
                     ],
                   ),
                 ),
@@ -76,8 +102,8 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class Transactions extends StatelessWidget {
-  const Transactions({
+class TransactionsPage extends StatelessWidget {
+  const TransactionsPage({
     Key? key,
   }) : super(key: key);
 
