@@ -76,6 +76,9 @@ class TransactionsState extends ChangeNotifier {
     }
   }
 
+  /// Determines the sort behaviour of the symbol column
+  ///
+  /// Rule for sorting by Symbol: {base} + {quote} + {type}
   void sortBySymbol(SortType sortType) {
     if (sortType == SortType.descending) {
       currentData.sort((a, b) => (b.base! + b.quote! + b.type!)

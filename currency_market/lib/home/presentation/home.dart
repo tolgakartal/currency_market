@@ -59,18 +59,12 @@ class HomePage extends StatelessWidget {
                       case TransactionType.future:
                         sortState.requestCleanSort();
                         sortState.requestSortVolume();
-                        transactionsState.sortByVolume(
-                            sortState.volumeSortRequested
-                                ? SortType.ascending
-                                : SortType.descending);
+                        transactionsState.sortByVolume(SortType.descending);
                         break;
                       case TransactionType.spot:
                         sortState.requestCleanSort();
                         sortState.requestSortVolume();
-                        transactionsState.sortByVolume(
-                            sortState.volumeSortRequested
-                                ? SortType.ascending
-                                : SortType.descending);
+                        transactionsState.sortByVolume(SortType.descending);
                         break;
                       default:
                     }
@@ -113,7 +107,28 @@ class TransactionsPage extends StatelessWidget {
       child: Center(
         child: Column(
           children: const [
-            SizedBox(height: 64),
+            SizedBox(height: 16),
+            TextField(
+              decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    width: 1,
+                    color: Colors.black,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    width: 3,
+                    color: Colors.amber,
+                  ),
+                ),
+                focusColor: Colors.black,
+                fillColor: Colors.black,
+                labelStyle: TextStyle(color: Colors.black),
+                label: Text('Search...'),
+              ),
+            ),
+            SizedBox(height: 16),
             TransactionTableHeader(),
             SizedBox(height: 16),
             TransactionTable(),
