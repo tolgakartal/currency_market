@@ -1,47 +1,13 @@
-import 'package:currency_market/home/model/market_data.dart';
-import 'package:flutter/foundation.dart';
+import 'package:currency_market/transaction/data/model/transaction.dart';
 
-enum MarketDataType { spot, future, all }
+class TransactionsRepository {
+  TransactionsRepository._();
 
-enum SortType { symbol, lastPrice, volume }
+  static final instance = TransactionsRepository._();
 
-const String spotTypeKey = 'SPOT';
-const String futureTypeKey = 'FUTURES';
-
-/// Stores and notifies market data
-class MarketState extends ChangeNotifier {
-  /*
-- All: Show both Spot and Futures data
-- Spot: Only show Spot data
-- Futures: Only show Futures data
-  */
-
-  MarketDataType _selectedMarketDataType = MarketDataType.all;
-  MarketDataType get selectedMarketDataType => _selectedMarketDataType;
-  set selectedMarketDataType(MarketDataType newValue) {
-    _selectedMarketDataType = newValue;
-    notifyListeners();
+  List<Transaction> getTransactions() {
+    return _mockMarketData;
   }
-
-  List<Transaction> getMarketData() {
-    _mockMarketData.sort((a, b) => a.compareTo(b));
-    switch (selectedMarketDataType) {
-      case MarketDataType.all:
-        return _mockMarketData;
-      case MarketDataType.spot:
-        return spotData;
-      case MarketDataType.future:
-        return futuresData;
-      default:
-    }
-    return _mockMarketData.where((element) => element.type == 'SPOT').toList();
-  }
-
-  List<Transaction> get spotData =>
-      _mockMarketData.where((element) => element.type == 'SPOT').toList();
-
-  List<Transaction> get futuresData =>
-      _mockMarketData.where((element) => element.type == 'FUTURES').toList();
 }
 
 final _mockMarketData = [

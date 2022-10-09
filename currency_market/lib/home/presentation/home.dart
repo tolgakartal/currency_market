@@ -1,6 +1,7 @@
 import 'dart:ui';
-import 'package:currency_market/home/presentation/transaction_table.dart';
-import 'package:currency_market/home/state/market_state.dart';
+import 'package:currency_market/transaction/presentation/transaction_table.dart';
+import 'package:currency_market/transaction/presentation/transaction_table_header.dart';
+import 'package:currency_market/transaction/state/transactions_state.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +11,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final marketDataProvider = context.watch<MarketState>();
+    final marketDataProvider = context.watch<TransactionsState>();
     return DefaultTabController(
       length: 3,
       initialIndex: 0,
@@ -43,10 +44,10 @@ class HomePage extends StatelessWidget {
                   mouseCursor: SystemMouseCursors.noDrop,
                   onTap: (x) {
                     marketDataProvider.selectedMarketDataType = x == 0
-                        ? MarketDataType.all
+                        ? TransactionType.all
                         : x == 1
-                            ? MarketDataType.spot
-                            : MarketDataType.future;
+                            ? TransactionType.spot
+                            : TransactionType.future;
                   },
                   tabs: const [
                     Tab(text: 'ALL'),
@@ -82,14 +83,16 @@ class Transactions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: const [
-          SizedBox(height: 64),
-          TransactionTableHeader(),
-          SizedBox(height: 16),
-          TransactionTable(),
-        ],
+    return SingleChildScrollView(
+      child: Center(
+        child: Column(
+          children: const [
+            SizedBox(height: 64),
+            TransactionTableHeader(),
+            SizedBox(height: 16),
+            TransactionTable(),
+          ],
+        ),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:currency_market/home/presentation/home.dart';
-import 'package:currency_market/home/state/market_state.dart';
+import 'package:currency_market/transaction/state/table_sort_state.dart';
+import 'package:currency_market/transaction/state/transactions_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,8 +28,15 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: ChangeNotifierProvider(
-        create: (context) => MarketState(),
+      home: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<TransactionsState>.value(
+            value: TransactionsState(),
+          ),
+          ChangeNotifierProvider<TableSortState>.value(
+            value: TableSortState(),
+          ),
+        ],
         child: const HomePage(),
       ),
     );

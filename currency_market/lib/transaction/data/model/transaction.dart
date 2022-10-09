@@ -1,23 +1,3 @@
-class MarketData {
-  Transaction? transaction;
-
-  MarketData({this.transaction});
-
-  MarketData.fromJson(Map<String, dynamic> json) {
-    transaction = json['transaction'] != null
-        ? Transaction.fromJson(json['transaction'])
-        : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (transaction != null) {
-      data['transaction'] = transaction?.toJson();
-    }
-    return data;
-  }
-}
-
 class Transaction extends Comparable<Transaction> {
   final String? base;
   final String? quote;
